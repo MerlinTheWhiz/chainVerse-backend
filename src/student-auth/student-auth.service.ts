@@ -29,6 +29,8 @@ import {
 const ACCESS_TOKEN_EXPIRY = 3600;
 const REFRESH_TOKEN_EXPIRY = 604800;
 const BCRYPT_SALT_ROUNDS = 10;
+const VERIFICATION_TOKEN_EXPIRY = 86400; // 24 hours
+const RESET_TOKEN_EXPIRY = 900;          // 15 minutes
 
 @Injectable()
 export class StudentAuthService {
@@ -164,7 +166,6 @@ export class StudentAuthService {
       throw new ConflictException('Email already registered');
     }
 
-    const verificationToken = crypto.randomBytes(32).toString('hex');
     const passwordHash = await this.hashPassword(dto.password);
 
     const student = await new this.studentModel({
@@ -172,7 +173,6 @@ export class StudentAuthService {
       lastName: dto.lastName,
       email: dto.email,
       passwordHash,
-      verificationToken,
     }).save();
 
     const verificationToken = this.createVerificationToken(
@@ -456,6 +456,9 @@ export class StudentAuthService {
     if (!resetTokenRecord) {
       throw new BadRequestException('Invalid or expired reset token');
     }
+
+    const student = await this.studentModel.findById(resetTokenRecord.studentId).exec();
+    if (!student) throw new NotFoundException('Student not found');
 
     const passwordHash = await this.hashPassword(dto.newPassword);
     student.passwordHash = passwordHash;
