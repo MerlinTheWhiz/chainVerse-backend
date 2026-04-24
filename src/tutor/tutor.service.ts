@@ -55,7 +55,10 @@ export class TutorService {
     const verify = crypto
       .pbkdf2Sync(password, salt, 10000, 64, 'sha512')
       .toString('hex');
-    return hash === verify;
+    return crypto.timingSafeEqual(
+      Buffer.from(hash, 'hex'),
+      Buffer.from(verify, 'hex'),
+    );
   }
 
   private createJwt(
