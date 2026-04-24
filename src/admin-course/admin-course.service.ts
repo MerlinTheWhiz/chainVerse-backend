@@ -334,7 +334,7 @@ export class AdminCourseService {
     }
 
     course.deletedAt = new Date();
-    course.deletedBy = isAdmin ? `admin:${adminId}` : `tutor:${tutorId}`;
+    course.deletedBy = isAdmin ? `admin:${tutorId}` : `tutor:${tutorId}`;
     course.deletionReason = reason || 'User requested deletion';
     await course.save();
 
