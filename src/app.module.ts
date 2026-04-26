@@ -27,6 +27,7 @@ import { StudentEnrollmentModule } from './student-enrollment/student-enrollment
 import { CourseAnalyticsModule } from './course-analytics/course-analytics.module';
 import { GamificationPointsModule } from './gamification-points/gamification-points.module';
 import { FaqManagementModule } from './faq-management/faq-management.module';
+import { GoogleAuthModule } from './google-auth/google-auth.module';
 
 @Module({
   imports: [
@@ -80,6 +81,8 @@ import { FaqManagementModule } from './faq-management/faq-management.module';
     GamificationPointsModule,
     // FAQ
     FaqManagementModule,
+    // Google Auth
+    GoogleAuthModule,
   ],
   controllers: [AppController],
   providers: [
