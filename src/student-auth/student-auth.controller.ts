@@ -63,7 +63,7 @@ export class StudentAuthController {
     return this.studentAuthService.login(dto);
   }
 
-  @Post('forget/password')
+  @Post('forgot-password')
   @ApiOperation({ summary: 'Request a password reset link' })
   @ApiResponse({
     status: 200,
@@ -78,7 +78,7 @@ export class StudentAuthController {
     );
   }
 
-  @Post('reset/password')
+  @Post('reset-password')
   @ApiOperation({ summary: 'Reset password using a valid reset token' })
   @ApiResponse({ status: 200, description: 'Password reset successfully' })
   @ApiResponse({

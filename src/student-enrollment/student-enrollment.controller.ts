@@ -45,10 +45,11 @@ export class StudentEnrollmentController {
 
   @ApiOperation({ summary: 'Check if student is enrolled in a course' })
   @Get('is-enrolled/:courseId')
-  isEnrolled(
+  async isEnrolled(
     @Req() req: { user: { id: string } },
     @Param('courseId') courseId: string,
   ) {
-    return this.service.isEnrolled(req.user.id, courseId);
+    const enrolled = await this.service.isEnrolled(req.user.id, courseId);
+    return { isEnrolled: enrolled };
   }
 }
