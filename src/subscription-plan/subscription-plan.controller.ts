@@ -42,10 +42,7 @@ export class SubscriptionPlanController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
-  update(
-    @Param('id') id: string,
-    @Body() payload: UpdateSubscriptionPlanDto,
-  ) {
+  update(@Param('id') id: string, @Body() payload: UpdateSubscriptionPlanDto) {
     return this.service.update(id, payload);
   }
 

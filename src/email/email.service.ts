@@ -28,12 +28,26 @@ export class EmailService {
     }
   }
 
+  async send(to: string, subject: string, text: string): Promise<void> {
+    const from =
+      this.configService.get<string>('emailFrom') ??
+      'noreply@chainverse.academy';
+    if (this.transporter) {
+      await this.transporter.sendMail({ from, to, subject, text });
+      this.logger.log(`Email sent to ${to}: ${subject}`);
+    } else {
+      this.logger.warn(`SMTP not configured. Email to ${to} was NOT sent: ${subject}`);
+    }
+  }
+
   async sendPasswordReset(
     to: string,
     resetToken: string,
     baseUrl: string,
   ): Promise<void> {
-    const from = this.configService.get<string>('emailFrom') ?? 'noreply@chainverse.academy';
+    const from =
+      this.configService.get<string>('emailFrom') ??
+      'noreply@chainverse.academy';
     const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
 
     const mailOptions = {

@@ -1,5 +1,14 @@
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AdminFinancialAidManagementService } from './admin-financial-aid-management.service';
 import { CreateAdminFinancialAidManagementDto } from './dto/create-admin-financial-aid-management.dto';
 import { UpdateAdminFinancialAidManagementDto } from './dto/update-admin-financial-aid-management.dto';
@@ -33,7 +42,10 @@ export class AdminFinancialAidManagementController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.MODERATOR, Role.TUTOR)
-  update(@Param('id') id: string, @Body() payload: UpdateAdminFinancialAidManagementDto) {
+  update(
+    @Param('id') id: string,
+    @Body() payload: UpdateAdminFinancialAidManagementDto,
+  ) {
     return this.service.update(id, payload);
   }
 
@@ -46,7 +58,16 @@ export class AdminFinancialAidManagementController {
 }
 
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AdminFinancialAidManagementService } from './admin-financial-aid-management.service';
 import { CreateAdminFinancialAidManagementDto } from './dto/create-admin-financial-aid-management.dto';
 import { UpdateAdminFinancialAidManagementDto } from './dto/update-admin-financial-aid-management.dto';
@@ -80,7 +101,10 @@ export class AdminFinancialAidManagementController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.MODERATOR, Role.TUTOR)
-  update(@Param('id') id: string, @Body() payload: UpdateAdminFinancialAidManagementDto) {
+  update(
+    @Param('id') id: string,
+    @Body() payload: UpdateAdminFinancialAidManagementDto,
+  ) {
     return this.service.update(id, payload);
   }
 
@@ -92,7 +116,16 @@ export class AdminFinancialAidManagementController {
   }
 }
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AdminFinancialAidManagementService } from './admin-financial-aid-management.service';
 import { CreateAdminFinancialAidManagementDto } from './dto/create-admin-financial-aid-management.dto';
 import { UpdateAdminFinancialAidManagementDto } from './dto/update-admin-financial-aid-management.dto';
@@ -126,7 +159,10 @@ export class AdminFinancialAidManagementController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.MODERATOR, Role.TUTOR)
-  update(@Param('id') id: string, @Body() payload: UpdateAdminFinancialAidManagementDto) {
+  update(
+    @Param('id') id: string,
+    @Body() payload: UpdateAdminFinancialAidManagementDto,
+  ) {
     return this.service.update(id, payload);
   }
 

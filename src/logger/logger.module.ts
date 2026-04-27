@@ -21,8 +21,7 @@ import { IncomingMessage } from 'http';
              * otherwise generate a fresh UUID.
              */
             genReqId: (req: IncomingMessage) =>
-              (req.headers['x-request-id'] as string) ??
-              crypto.randomUUID(),
+              (req.headers['x-request-id'] as string) ?? crypto.randomUUID(),
 
             serializers: {
               req: (req: { id: string; method: string; url: string }) => ({

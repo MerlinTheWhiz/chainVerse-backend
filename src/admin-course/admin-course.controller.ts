@@ -29,18 +29,18 @@ export class AdminCourseController {
   constructor(private readonly adminCourseService: AdminCourseService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all courses with optional filters' })
+  @ApiOperation({ summary: 'Get all courses with optional filters and pagination' })
   findAll(
     @Query('status') status?: string,
     @Query('category') category?: string,
     @Query('limit') limit?: number,
-    @Query('skip') skip?: number,
+    @Query('page') page?: number,
   ) {
     return this.adminCourseService.findAll({
       status,
       category,
       limit: limit ? parseInt(String(limit), 10) : undefined,
-      skip: skip ? parseInt(String(skip), 10) : undefined,
+      page: page ? parseInt(String(page), 10) : undefined,
     });
   }
 
