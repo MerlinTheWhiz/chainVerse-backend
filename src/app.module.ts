@@ -35,6 +35,7 @@ import { SubscriptionPlanModule } from './subscription-plan/subscription-plan.mo
 import { OrganizationModule } from './organization/organization.module';
 import { OrganizationMemberModule } from './organization-member/organization-member.module';
 import { NotificationModule } from './notification/notification.module';
+import { FinancialAidModule } from './financial-aid/financial-aid.module';
 
 @Module({
   imports: [
@@ -108,6 +109,8 @@ import { NotificationModule } from './notification/notification.module';
     OrganizationMemberModule,
     // Notification
     NotificationModule,
+    // Financial Aid
+    FinancialAidModule,
   ],
   controllers: [AppController],
   providers: [
