@@ -5,7 +5,10 @@ import { VerificationService } from './verification.service';
 import { VerificationLog } from './entities/verification-log.entity';
 import { TicketService } from '../tickets-inventory/services/ticket.service';
 import { EventsService } from '../events/events.service';
-import { Ticket, TicketStatus } from '../tickets-inventory/entities/ticket.entity';
+import {
+  Ticket,
+  TicketStatus,
+} from '../tickets-inventory/entities/ticket.entity';
 import { Event } from '../events/entities/event.entity';
 import {
   VerificationStatus,
@@ -137,9 +140,9 @@ describe('VerificationService', () => {
   describe('verifyTicket - Core Logic', () => {
     describe('Ticket Not Found - INVALID', () => {
       it('should return INVALID when ticket is not found', async () => {
-        jest.spyOn(ticketService, 'findByQrCode').mockRejectedValue(
-          new NotFoundException('Ticket not found'),
-        );
+        jest
+          .spyOn(ticketService, 'findByQrCode')
+          .mockRejectedValue(new NotFoundException('Ticket not found'));
 
         const mockTicketRepo = {
           findOne: jest.fn().mockResolvedValue(null),
@@ -276,9 +279,7 @@ describe('VerificationService', () => {
         jest
           .spyOn(dataSource, 'getRepository')
           .mockReturnValue(mockTicketRepo as any);
-        jest
-          .spyOn(eventsService, 'getEventById')
-          .mockResolvedValue(pastEvent);
+        jest.spyOn(eventsService, 'getEventById').mockResolvedValue(pastEvent);
 
         jest
           .spyOn(verificationLogRepository, 'create')
@@ -305,9 +306,7 @@ describe('VerificationService', () => {
         jest
           .spyOn(dataSource, 'getRepository')
           .mockReturnValue(mockTicketRepo as any);
-        jest
-          .spyOn(eventsService, 'getEventById')
-          .mockResolvedValue(mockEvent);
+        jest.spyOn(eventsService, 'getEventById').mockResolvedValue(mockEvent);
 
         jest
           .spyOn(verificationLogRepository, 'create')
@@ -340,33 +339,31 @@ describe('VerificationService', () => {
           save: jest.fn().mockResolvedValue({}),
         };
 
-        jest.spyOn(dataSource, 'getRepository').mockImplementation((entity: any) => {
-          if (entity === Ticket) {
-            return mockTicketRepo as any;
-          }
-          if (entity === VerificationLog) {
-            return mockLogRepo as any;
-          }
-          return {} as any;
-        });
-
         jest
-          .spyOn(eventsService, 'getEventById')
-          .mockResolvedValue(mockEvent);
+          .spyOn(dataSource, 'getRepository')
+          .mockImplementation((entity: any) => {
+            if (entity === Ticket) {
+              return mockTicketRepo as any;
+            }
+            if (entity === VerificationLog) {
+              return mockLogRepo as any;
+            }
+            return {} as any;
+          });
 
-    const mockManager = {
-      getRepository: jest
-        .fn()
-        .mockImplementation((entity: any) => {
-          if (entity === Ticket) {
-            return mockTicketRepo;
-          }
-          if (entity === VerificationLog) {
-            return mockLogRepo;
-          }
-          return {};
-        }),
-    };
+        jest.spyOn(eventsService, 'getEventById').mockResolvedValue(mockEvent);
+
+        const mockManager = {
+          getRepository: jest.fn().mockImplementation((entity: any) => {
+            if (entity === Ticket) {
+              return mockTicketRepo;
+            }
+            if (entity === VerificationLog) {
+              return mockLogRepo;
+            }
+            return {};
+          }),
+        };
 
         const testQueryRunner = {
           connect: jest.fn(),
@@ -592,9 +589,7 @@ describe('VerificationService', () => {
 
   describe('canVerifyForEvent', () => {
     it('should return true when event is ongoing', async () => {
-      jest
-        .spyOn(eventsService, 'getEventById')
-        .mockResolvedValue(mockEvent);
+      jest.spyOn(eventsService, 'getEventById').mockResolvedValue(mockEvent);
 
       const result = await service.canVerifyForEvent('event-1');
 
@@ -608,9 +603,7 @@ describe('VerificationService', () => {
         eventDate: new Date(Date.now() + 86400000),
       };
 
-      jest
-        .spyOn(eventsService, 'getEventById')
-        .mockResolvedValue(futureEvent);
+      jest.spyOn(eventsService, 'getEventById').mockResolvedValue(futureEvent);
 
       const result = await service.canVerifyForEvent('event-1');
 
@@ -624,9 +617,7 @@ describe('VerificationService', () => {
         eventClosingDate: new Date(Date.now() - 3600000),
       };
 
-      jest
-        .spyOn(eventsService, 'getEventById')
-        .mockResolvedValue(pastEvent);
+      jest.spyOn(eventsService, 'getEventById').mockResolvedValue(pastEvent);
 
       const result = await service.canVerifyForEvent('event-1');
 
@@ -657,15 +648,15 @@ describe('VerificationService', () => {
       expect(
         service.getStatusMessage(VerificationStatus.ALREADY_USED),
       ).toContain('already been used');
-      expect(
-        service.getStatusMessage(VerificationStatus.CANCELLED),
-      ).toContain('cancelled');
+      expect(service.getStatusMessage(VerificationStatus.CANCELLED)).toContain(
+        'cancelled',
+      );
       expect(
         service.getStatusMessage(VerificationStatus.EVENT_NOT_STARTED),
       ).toContain('not started');
-      expect(service.getStatusMessage(VerificationStatus.EVENT_ENDED)).toContain(
-        'ended',
-      );
+      expect(
+        service.getStatusMessage(VerificationStatus.EVENT_ENDED),
+      ).toContain('ended');
     });
   });
 });

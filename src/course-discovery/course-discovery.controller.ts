@@ -1,17 +1,14 @@
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CourseDiscoveryService } from './course-discovery.service';
 import { SearchCoursesDto } from './dto/search-courses.dto';
 
 @ApiTags('Courses (Public)')
 @Controller('courses')
 export class CourseDiscoveryController {
-  constructor(private readonly courseDiscoveryService: CourseDiscoveryService) {}
+  constructor(
+    private readonly courseDiscoveryService: CourseDiscoveryService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Search and filter courses' })
@@ -22,7 +19,9 @@ export class CourseDiscoveryController {
   @Get('featured')
   @ApiOperation({ summary: 'Get featured courses' })
   getFeatured(@Query('limit') limit?: number) {
-    return this.courseDiscoveryService.getFeatured(limit ? parseInt(String(limit), 10) : 10);
+    return this.courseDiscoveryService.getFeatured(
+      limit ? parseInt(String(limit), 10) : 10,
+    );
   }
 
   @Get('categories')

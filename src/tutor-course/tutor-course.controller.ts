@@ -30,7 +30,9 @@ export class TutorCourseController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get a specific course by ID (must be owned by tutor)' })
+  @ApiOperation({
+    summary: 'Get a specific course by ID (must be owned by tutor)',
+  })
   findOne(@Param('id') id: string, @CurrentUser('sub') tutorId: string) {
     return this.tutorCourseService.findOne(id, tutorId);
   }

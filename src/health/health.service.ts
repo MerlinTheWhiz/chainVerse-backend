@@ -24,7 +24,11 @@ export class HealthService {
    * Attempts a raw TCP connection and resolves with the round-trip latency.
    * This works regardless of which client library (if any) is installed.
    */
-  private tcpProbe(host: string, port: number, timeoutMs = 3000): Promise<number> {
+  private tcpProbe(
+    host: string,
+    port: number,
+    timeoutMs = 3000,
+  ): Promise<number> {
     return new Promise((resolve, reject) => {
       const start = Date.now();
       const socket = net.createConnection({ host, port });

@@ -64,9 +64,7 @@ export class StudentSavedCoursesService {
     return { studentId, courses: saved.map((s) => s.courseId) };
   }
 
-  async list(
-    studentId: string,
-  ): Promise<{
+  async list(studentId: string): Promise<{
     studentId: string;
     courses: Array<{ courseId: string; course: unknown }>;
   }> {
