@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Enrollment, EnrollmentDocument } from './schemas/enrollment.schema';
 import { Course, CourseDocument } from '../admin-course/schemas/course.schema';
@@ -96,6 +96,11 @@ export class StudentEnrollmentService {
 
     for (const item of cartItems) {
       try {
+        if (!isValidObjectId(item.courseId)) {
+          failed.push(item.courseId);
+          continue;
+        }
+
         const course = await this.courseModel.findById(item.courseId).exec();
         if (!course) {
           failed.push(item.courseId);

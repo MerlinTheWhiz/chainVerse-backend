@@ -6,12 +6,13 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { ReviewCourseDto } from './dto/review-course.dto';
 import { Course, CourseDocument } from './schemas/course.schema';
+import { Tutor, TutorDocument } from '../tutor/schemas/tutor.schema';
 import { DomainEvents } from '../events/event-names';
 
 @Injectable()
@@ -19,6 +20,8 @@ export class AdminCourseService {
   constructor(
     @InjectModel(Course.name)
     private readonly courseModel: Model<CourseDocument>,
+    @InjectModel(Tutor.name)
+    private readonly tutorModel: Model<TutorDocument>,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -430,9 +433,9 @@ export class AdminCourseService {
     }
 
     if (Object.keys(update).length > 0) {
-      await this.courseModel.db
-        .collection('tutors')
-        .updateOne({ _id: tutorId }, { $inc: update });
+      await this.tutorModel
+        .findByIdAndUpdate(new Types.ObjectId(tutorId), { $inc: update })
+        .exec();
     }
   }
 

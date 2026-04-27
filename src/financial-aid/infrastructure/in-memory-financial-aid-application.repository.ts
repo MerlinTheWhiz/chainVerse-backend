@@ -35,6 +35,10 @@ export class InMemoryFinancialAidApplicationRepository extends FinancialAidAppli
     return this.store.filter((a) => a.studentId === studentId);
   }
 
+  async findByStudentAndCourse(studentId: string, courseId: string): Promise<FinancialAidApplication | null> {
+    return this.store.find((a) => a.studentId === studentId && a.courseId === courseId) ?? null;
+  }
+
   async delete(id: string): Promise<void> {
     const idx = this.store.findIndex((a) => a.id === id);
     if (idx !== -1) this.store.splice(idx, 1);
