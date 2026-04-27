@@ -13,7 +13,9 @@ import { FinancialAidApplicationRepository } from '../domain/financial-aid-appli
 export class InMemoryFinancialAidApplicationRepository extends FinancialAidApplicationRepository {
   private readonly store: FinancialAidApplication[] = [];
 
-  async save(application: FinancialAidApplication): Promise<FinancialAidApplication> {
+  async save(
+    application: FinancialAidApplication,
+  ): Promise<FinancialAidApplication> {
     const idx = this.store.findIndex((a) => a.id === application.id);
     if (idx === -1) {
       this.store.push(application);

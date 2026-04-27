@@ -28,7 +28,10 @@ function makeToken(
 }
 
 function makeContext(authHeader?: string): ExecutionContext {
-  const request = { headers: { authorization: authHeader }, user: undefined as unknown };
+  const request = {
+    headers: { authorization: authHeader },
+    user: undefined as unknown,
+  };
   return {
     switchToHttp: () => ({ getRequest: () => request }),
   } as unknown as ExecutionContext;
@@ -80,15 +83,15 @@ describe('JwtAuthGuard', () => {
   // --- structural problems ---
 
   it('rejects a token with fewer than 3 dot-separated parts', () => {
-    expect(() =>
-      guard.canActivate(makeContext('Bearer only.two')),
-    ).toThrow(UnauthorizedException);
+    expect(() => guard.canActivate(makeContext('Bearer only.two'))).toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('rejects a token with more than 3 dot-separated parts', () => {
-    expect(() =>
-      guard.canActivate(makeContext('Bearer a.b.c.d')),
-    ).toThrow(UnauthorizedException);
+    expect(() => guard.canActivate(makeContext('Bearer a.b.c.d'))).toThrow(
+      UnauthorizedException,
+    );
   });
 
   // --- signature verification ---
@@ -104,7 +107,11 @@ describe('JwtAuthGuard', () => {
   });
 
   it('rejects a token with a tampered payload', () => {
-    const valid = makeToken({ sub: 'user-1', email: 'a@b.com', role: 'student' });
+    const valid = makeToken({
+      sub: 'user-1',
+      email: 'a@b.com',
+      role: 'student',
+    });
     const [header, , sig] = valid.split('.');
     // Swap in a payload claiming admin role without re-signing
     const evilBody = Buffer.from(
@@ -175,7 +182,11 @@ describe('JwtAuthGuard', () => {
   // --- role must come from token claims, not request headers ---
 
   it('ignores any role header and derives role solely from the token', () => {
-    const token = makeToken({ sub: 'user-1', email: 'a@b.com', role: 'student' });
+    const token = makeToken({
+      sub: 'user-1',
+      email: 'a@b.com',
+      role: 'student',
+    });
     const ctx = makeContext(`Bearer ${token}`);
     // Inject a fraudulent role header that should be ignored
     ctx.switchToHttp().getRequest().headers['x-role'] = 'admin';
@@ -209,7 +220,11 @@ describe('JwtAuthGuard', () => {
 
   it('accepts tokens for each supported role', () => {
     for (const role of ['admin', 'moderator', 'tutor', 'student']) {
-      const token = makeToken({ sub: `id-${role}`, email: `${role}@test.com`, role });
+      const token = makeToken({
+        sub: `id-${role}`,
+        email: `${role}@test.com`,
+        role,
+      });
       const ctx = makeContext(`Bearer ${token}`);
       expect(guard.canActivate(ctx)).toBe(true);
       expect(ctx.switchToHttp().getRequest().user.role).toBe(role);

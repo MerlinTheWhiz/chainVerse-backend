@@ -36,10 +36,10 @@ const ACCESS_TOKEN_EXPIRY = 3600;
 const REFRESH_TOKEN_EXPIRY = 604800;
 const BCRYPT_SALT_ROUNDS = 10;
 const VERIFICATION_TOKEN_EXPIRY = 86400; // 24 hours
-const RESET_TOKEN_EXPIRY = 900;          // 15 minutes
-const VERIFICATION_COOLDOWN = 60;       // 1 minute cooldown between attempts
+const RESET_TOKEN_EXPIRY = 900; // 15 minutes
+const VERIFICATION_COOLDOWN = 60; // 1 minute cooldown between attempts
 const VERIFICATION_ATTEMPT_WINDOW = 900; // 15 minutes window for attempt counting
-const MAX_VERIFICATION_ATTEMPTS = 5;     // Maximum 5 attempts per window
+const MAX_VERIFICATION_ATTEMPTS = 5; // Maximum 5 attempts per window
 
 @Injectable()
 export class StudentAuthService {
@@ -391,8 +391,13 @@ export class StudentAuthService {
     await student.save();
 
     // Send password reset email (token must only travel to user's inbox)
-    const baseUrl = this.configService.get<string>('baseUrl') ?? 'http://localhost:3000';
-    await this.emailService.sendPasswordReset(student.email, resetToken, baseUrl);
+    const baseUrl =
+      this.configService.get<string>('baseUrl') ?? 'http://localhost:3000';
+    await this.emailService.sendPasswordReset(
+      student.email,
+      resetToken,
+      baseUrl,
+    );
 
     // Do NOT return the token in the response (security)
     return {
@@ -429,7 +434,9 @@ export class StudentAuthService {
       throw new BadRequestException('Invalid or expired reset token');
     }
 
-    const student = await this.studentModel.findById(resetTokenRecord.studentId).exec();
+    const student = await this.studentModel
+      .findById(resetTokenRecord.studentId)
+      .exec();
     if (!student) throw new NotFoundException('Student not found');
 
     const passwordHash = await this.hashPassword(dto.newPassword);

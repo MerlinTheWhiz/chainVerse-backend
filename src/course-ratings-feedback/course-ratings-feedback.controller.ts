@@ -63,10 +63,7 @@ export class CourseRatingsFeedbackController {
   @Delete(':id/rate')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.STUDENT)
-  remove(
-    @Param('id') courseId: string,
-    @Req() req: { user: { id: string } },
-  ) {
+  remove(@Param('id') courseId: string, @Req() req: { user: { id: string } }) {
     return this.service.remove(courseId, req.user.id);
   }
 }

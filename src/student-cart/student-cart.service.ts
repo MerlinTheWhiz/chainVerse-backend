@@ -52,9 +52,7 @@ export class StudentCartService {
     return cartItem.save();
   }
 
-  async getCart(
-    studentId: string,
-  ): Promise<{
+  async getCart(studentId: string): Promise<{
     studentId: string;
     items: Array<{ cartItem: CartItem; course: unknown }>;
     totalItems: number;

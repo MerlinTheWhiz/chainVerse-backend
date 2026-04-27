@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { StudentEnrollmentService } from './student-enrollment.service';
 import { Enrollment } from './schemas/enrollment.schema';
 import { Course } from '../admin-course/schemas/course.schema';
@@ -98,7 +102,9 @@ describe('StudentEnrollmentService', () => {
         exec: jest.fn().mockResolvedValue(mockCourse),
       });
 
-      await expect(service.enrollFree(studentId, courseId)).rejects.toThrow(BadRequestException);
+      await expect(service.enrollFree(studentId, courseId)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw ConflictException if already enrolled', async () => {
@@ -113,7 +119,9 @@ describe('StudentEnrollmentService', () => {
         exec: jest.fn().mockResolvedValue({ _id: 'enrollment1' }),
       });
 
-      await expect(service.enrollFree(studentId, courseId)).rejects.toThrow(ConflictException);
+      await expect(service.enrollFree(studentId, courseId)).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 });

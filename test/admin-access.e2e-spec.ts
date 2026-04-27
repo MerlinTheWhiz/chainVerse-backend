@@ -35,8 +35,6 @@ describe('Admin Access Control (e2e)', () => {
   });
 
   it('denies missing token', async () => {
-    await request(app.getHttpServer())
-      .get(endpoint)
-      .expect(401);
+    await request(app.getHttpServer()).get(endpoint).expect(401);
   });
 });

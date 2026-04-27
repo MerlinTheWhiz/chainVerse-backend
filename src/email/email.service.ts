@@ -33,7 +33,9 @@ export class EmailService {
     resetToken: string,
     baseUrl: string,
   ): Promise<void> {
-    const from = this.configService.get<string>('emailFrom') ?? 'noreply@chainverse.academy';
+    const from =
+      this.configService.get<string>('emailFrom') ??
+      'noreply@chainverse.academy';
     const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
 
     const mailOptions = {

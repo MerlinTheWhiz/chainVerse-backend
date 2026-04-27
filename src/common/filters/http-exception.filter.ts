@@ -39,7 +39,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse;
         error = exceptionResponse;
-      } else if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      } else if (
+        typeof exceptionResponse === 'object' &&
+        exceptionResponse !== null
+      ) {
         const body = exceptionResponse as Record<string, unknown>;
         message = (body.message as string | string[]) ?? exception.message;
         error = (body.error as string) ?? HttpStatus[statusCode] ?? 'Error';

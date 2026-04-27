@@ -1,12 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ConfigService } from '@nestjs/config';
 import { Model, Types } from 'mongoose';
 import { StudentAuthService } from './student-auth.service';
 import { Student, StudentDocument } from './schemas/student.schema';
-import { RefreshToken, RefreshTokenDocument } from './schemas/refresh-token.schema';
+import {
+  RefreshToken,
+  RefreshTokenDocument,
+} from './schemas/refresh-token.schema';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { LoginStudentDto } from './dto/login-student.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
@@ -70,8 +77,12 @@ describe('StudentAuthService', () => {
     }).compile();
 
     service = module.get<StudentAuthService>(StudentAuthService);
-    studentModel = module.get<Model<StudentDocument>>(getModelToken(Student.name));
-    refreshTokenModel = module.get<Model<RefreshTokenDocument>>(getModelToken(RefreshToken.name));
+    studentModel = module.get<Model<StudentDocument>>(
+      getModelToken(Student.name),
+    );
+    refreshTokenModel = module.get<Model<RefreshTokenDocument>>(
+      getModelToken(RefreshToken.name),
+    );
     eventEmitter = module.get<EventEmitter2>(EventEmitter2);
   });
 
@@ -89,14 +100,16 @@ describe('StudentAuthService', () => {
 
     it('should create a new student with hashed password', async () => {
       jest.spyOn(studentModel, 'findOne').mockResolvedValue(null as any);
-      
+
       const mockCreatedStudent = {
         ...mockStudent,
         passwordHash: await bcrypt.hash('SecurePassword123!', 10),
-        save: jest.fn().mockResolvedValue({ ...mockStudent, id: 'test-student-id' }),
+        save: jest
+          .fn()
+          .mockResolvedValue({ ...mockStudent, id: 'test-student-id' }),
       } as any;
 
-      jest.spyOn(studentModel, 'create').mockResolvedValue(mockCreatedStudent as any);
+      jest.spyOn(studentModel, 'create').mockResolvedValue(mockCreatedStudent);
 
       const result = await service.create(createStudentDto);
 
@@ -112,41 +125,59 @@ describe('StudentAuthService', () => {
     it('should throw ConflictException for duplicate email', async () => {
       jest.spyOn(studentModel, 'findOne').mockResolvedValue(mockStudent as any);
 
-      await expect(service.create(createStudentDto)).rejects.toThrow(ConflictException);
-      await expect(service.create(createStudentDto)).rejects.toThrow('Email already registered');
+      await expect(service.create(createStudentDto)).rejects.toThrow(
+        ConflictException,
+      );
+      await expect(service.create(createStudentDto)).rejects.toThrow(
+        'Email already registered',
+      );
     });
 
     it('should throw BadRequestException for invalid email format', async () => {
       const invalidDto = { ...createStudentDto, email: 'invalid-email' };
 
-      await expect(service.create(invalidDto)).rejects.toThrow(BadRequestException);
-      await expect(service.create(invalidDto)).rejects.toThrow('Invalid email format');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Invalid email format',
+      );
     });
 
     it('should throw BadRequestException for short password', async () => {
       const invalidDto = { ...createStudentDto, password: 'short' };
 
-      await expect(service.create(invalidDto)).rejects.toThrow(BadRequestException);
-      await expect(service.create(invalidDto)).rejects.toThrow('Password must be at least 8 characters');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'Password must be at least 8 characters',
+      );
     });
 
     it('should throw BadRequestException for missing required fields', async () => {
       const invalidDto = { firstName: 'Test', lastName: 'Student' } as any;
 
-      await expect(service.create(invalidDto)).rejects.toThrow(BadRequestException);
-      await expect(service.create(invalidDto)).rejects.toThrow('firstName, lastName, email, and password are required');
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.create(invalidDto)).rejects.toThrow(
+        'firstName, lastName, email, and password are required',
+      );
     });
 
     it('should emit STUDENT_REGISTERED event', async () => {
       jest.spyOn(studentModel, 'findOne').mockResolvedValue(null as any);
-      
+
       const mockCreatedStudent = {
         ...mockStudent,
         passwordHash: await bcrypt.hash('SecurePassword123!', 10),
-        save: jest.fn().mockResolvedValue({ ...mockStudent, id: 'test-student-id' }),
+        save: jest
+          .fn()
+          .mockResolvedValue({ ...mockStudent, id: 'test-student-id' }),
       } as any;
 
-      jest.spyOn(studentModel, 'create').mockResolvedValue(mockCreatedStudent as any);
+      jest.spyOn(studentModel, 'create').mockResolvedValue(mockCreatedStudent);
       const emitSpy = jest.spyOn(eventEmitter, 'emit');
 
       await service.create(createStudentDto);
@@ -176,7 +207,9 @@ describe('StudentAuthService', () => {
         emailVerified: true,
       } as any;
 
-      jest.spyOn(studentModel, 'findOne').mockResolvedValue(mockVerifiedStudent);
+      jest
+        .spyOn(studentModel, 'findOne')
+        .mockResolvedValue(mockVerifiedStudent);
 
       const result = await service.login(loginDto);
 
@@ -191,8 +224,12 @@ describe('StudentAuthService', () => {
     it('should throw UnauthorizedException for invalid email', async () => {
       jest.spyOn(studentModel, 'findOne').mockResolvedValue(null as any);
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
-      await expect(service.login(loginDto)).rejects.toThrow('Invalid email or password');
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
+      await expect(service.login(loginDto)).rejects.toThrow(
+        'Invalid email or password',
+      );
     });
 
     it('should throw UnauthorizedException for invalid password', async () => {
@@ -201,10 +238,16 @@ describe('StudentAuthService', () => {
         passwordHash: await bcrypt.hash('WrongPassword123!', 10),
       } as any;
 
-      jest.spyOn(studentModel, 'findOne').mockResolvedValue(wrongPasswordStudent);
+      jest
+        .spyOn(studentModel, 'findOne')
+        .mockResolvedValue(wrongPasswordStudent);
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
-      await expect(service.login(loginDto)).rejects.toThrow('Invalid email or password');
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
+      await expect(service.login(loginDto)).rejects.toThrow(
+        'Invalid email or password',
+      );
     });
 
     it('should throw UnauthorizedException for unverified email', async () => {
@@ -216,15 +259,23 @@ describe('StudentAuthService', () => {
 
       jest.spyOn(studentModel, 'findOne').mockResolvedValue(unverifiedStudent);
 
-      await expect(service.login(loginDto)).rejects.toThrow(UnauthorizedException);
-      await expect(service.login(loginDto)).rejects.toThrow('Please verify your email before logging in');
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
+      await expect(service.login(loginDto)).rejects.toThrow(
+        'Please verify your email before logging in',
+      );
     });
 
     it('should throw BadRequestException for missing credentials', async () => {
       const invalidDto = { email: 'test@example.com' } as any;
 
-      await expect(service.login(invalidDto)).rejects.toThrow(BadRequestException);
-      await expect(service.login(invalidDto)).rejects.toThrow('Email and password are required');
+      await expect(service.login(invalidDto)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.login(invalidDto)).rejects.toThrow(
+        'Email and password are required',
+      );
     });
   });
 
@@ -238,10 +289,14 @@ describe('StudentAuthService', () => {
         ...mockStudent,
         verificationToken: 'valid-verification-token',
         emailVerified: false,
-        save: jest.fn().mockResolvedValue({ ...mockStudent, emailVerified: true }),
+        save: jest
+          .fn()
+          .mockResolvedValue({ ...mockStudent, emailVerified: true }),
       } as any;
 
-      jest.spyOn(studentModel, 'findOne').mockResolvedValue(mockUnverifiedStudent);
+      jest
+        .spyOn(studentModel, 'findOne')
+        .mockResolvedValue(mockUnverifiedStudent);
 
       const result = await service.verifyEmail(verifyEmailDto);
 
@@ -253,14 +308,20 @@ describe('StudentAuthService', () => {
     it('should throw BadRequestException for missing token', async () => {
       const invalidDto = { token: '' } as any;
 
-      await expect(service.verifyEmail(invalidDto)).rejects.toThrow(BadRequestException);
-      await expect(service.verifyEmail(invalidDto)).rejects.toThrow('Verification token is required');
+      await expect(service.verifyEmail(invalidDto)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.verifyEmail(invalidDto)).rejects.toThrow(
+        'Verification token is required',
+      );
     });
 
     it('should throw NotFoundException for invalid token', async () => {
       jest.spyOn(studentModel, 'findOne').mockResolvedValue(null as any);
 
-      await expect(service.verifyEmail(verifyEmailDto)).rejects.toThrow('Invalid verification token');
+      await expect(service.verifyEmail(verifyEmailDto)).rejects.toThrow(
+        'Invalid verification token',
+      );
     });
   });
 
@@ -298,7 +359,10 @@ describe('StudentAuthService', () => {
       const wrongPassword = 'WrongPassword456!';
       const hash = await bcrypt.hash(password, 10);
 
-      const isValid = await (service as any).verifyPassword(wrongPassword, hash);
+      const isValid = await (service as any).verifyPassword(
+        wrongPassword,
+        hash,
+      );
 
       expect(isValid).toBe(false);
     });

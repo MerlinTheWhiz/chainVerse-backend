@@ -25,10 +25,7 @@ export class StudentCartController {
   constructor(private readonly service: StudentCartService) {}
 
   @Post('cart/:id/add')
-  add(
-    @Req() req: { user: { id: string } },
-    @Param('id') courseId: string,
-  ) {
+  add(@Req() req: { user: { id: string } }, @Param('id') courseId: string) {
     return this.service.add(req.user.id, courseId);
   }
 
@@ -47,10 +44,7 @@ export class StudentCartController {
   }
 
   @Delete(':id/cart')
-  remove(
-    @Param('id') courseId: string,
-    @Req() req: { user: { id: string } },
-  ) {
+  remove(@Param('id') courseId: string, @Req() req: { user: { id: string } }) {
     return this.service.remove(req.user.id, courseId);
   }
 }

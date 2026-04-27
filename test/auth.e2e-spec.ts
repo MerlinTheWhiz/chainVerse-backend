@@ -570,15 +570,13 @@ describe('Student Auth – Full Journey (e2e)', () => {
       ];
 
       for (const endpoint of protectedEndpoints) {
-        await request(server)
-          .get(endpoint)
-          .expect(401);
+        await request(server).get(endpoint).expect(401);
       }
     });
 
     it('rejects requests with invalid JWT token', async () => {
       const invalidToken = 'invalid.jwt.token';
-      
+
       await request(server)
         .get('/student/account-settings')
         .set('Authorization', `Bearer ${invalidToken}`)
@@ -587,8 +585,9 @@ describe('Student Auth – Full Journey (e2e)', () => {
 
     it('rejects requests with expired JWT token', async () => {
       // Create an expired token manually
-      const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjoxNjEwNjI4MDAwfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-      
+      const expiredToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjoxNjEwNjI4MDAwfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
       await request(server)
         .get('/student/account-settings')
         .set('Authorization', `Bearer ${expiredToken}`)
