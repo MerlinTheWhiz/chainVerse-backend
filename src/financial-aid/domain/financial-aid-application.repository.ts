@@ -25,6 +25,9 @@ export abstract class FinancialAidApplicationRepository {
     studentId: string,
   ): Promise<FinancialAidApplication[]>;
 
+  /** Return the application for a specific student+course pair, or null. */
+  abstract findByStudentAndCourse(studentId: string, courseId: string): Promise<FinancialAidApplication | null>;
+
   /** Permanently remove the application with the given id. */
   abstract delete(id: string): Promise<void>;
 }

@@ -67,6 +67,11 @@ export class MongooseFinancialAidApplicationRepository extends FinancialAidAppli
     return docs.map((d) => this.toEntity(d));
   }
 
+  async findByStudentAndCourse(studentId: string, courseId: string): Promise<FinancialAidApplication | null> {
+    const doc = await this.model.findOne({ studentId, courseId }).exec();
+    return doc ? this.toEntity(doc) : null;
+  }
+
   async delete(id: string): Promise<void> {
     await this.model.findByIdAndDelete(id).exec();
   }

@@ -112,12 +112,6 @@ export class StudentCartService {
     message: string;
     deleted: boolean;
   }> {
-    // Validate course exists
-    const course = await this.courseModel.findById(courseId).exec();
-    if (!course) {
-      throw new NotFoundException('Course not found');
-    }
-
     const result = await this.cartItemModel
       .findOneAndDelete({ studentId, courseId })
       .exec();
