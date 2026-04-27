@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VerificationService } from './verification.service';
 import { VerificationController } from './verification.controller';
-import { VerificationLog } from './entities/verification-log.entity';
+import { VerificationLog } from './verification-log.entity';
 import { VerificationLogRepository } from './verification-log.repository';
 import { TicketsModule } from '../tickets-inventory/tickets.module';
 import { EventsModule } from '../events/events.module';

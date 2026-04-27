@@ -12,7 +12,7 @@ import {
   VerificationLog,
   VerificationStats,
 } from './interfaces/verification.interface';
-import { VerificationLog as VerificationLogEntity } from './entities/verification-log.entity';
+import { VerificationLog as VerificationLogEntity } from './verification-log.entity';
 import { TicketService } from '../tickets-inventory/services/ticket.service';
 import { EventsService } from '../events/events.service';
 import { TicketStatus } from '../tickets-inventory/entities/ticket.entity';
