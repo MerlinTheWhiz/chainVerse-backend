@@ -17,7 +17,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 export class StudentAuthController {
   constructor(private readonly studentAuthService: StudentAuthService) {}
 
-  @Post('create')
+  @Post('register')
   @ApiOperation({ summary: 'Register a new student account' })
   @ApiResponse({ status: 201, description: 'Account created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid input or missing fields' })

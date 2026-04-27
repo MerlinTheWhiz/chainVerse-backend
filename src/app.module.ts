@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import appConfig from './config/app.config';
@@ -43,12 +44,19 @@ import { NotificationModule } from './notification/notification.module';
       validationSchema: envValidationSchema,
     }),
     EventEmitterModule.forRoot(),
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60,
-        limit: 10,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => {
+        const redisUrl = config.get<string>('redis.url');
+        return {
+          throttlers: [{ ttl: 60, limit: 10 }],
+          ...(redisUrl && {
+            storage: new ThrottlerStorageRedisService(redisUrl),
+          }),
+        };
       },
-    ]),
+      inject: [ConfigService],
+    }),
     // Global JWT module — makes JwtService available to all guards/services
     JwtModule.registerAsync({
       global: true,
