@@ -38,7 +38,7 @@ export class TutorController {
     return this.tutorService.verifyEmail(dto);
   }
 
-  @Post('forget/password')
+  @Post('forgot-password')
   forgetPassword(@Body() dto: ForgetTutorPasswordDto, @Req() req: Request) {
     return this.tutorService.forgetPassword(
       dto,
@@ -47,7 +47,7 @@ export class TutorController {
     );
   }
 
-  @Post('reset/password')
+  @Post('reset-password')
   resetPassword(@Body() dto: ResetTutorPasswordDto, @Req() req: Request) {
     return this.tutorService.resetPassword(
       dto,
