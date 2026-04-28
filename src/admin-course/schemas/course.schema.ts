@@ -93,10 +93,8 @@ export class Course {
     }>;
   }>;
 
-  // Enrollment tracking
-  @Prop({ type: [String], default: [] })
-  enrolledStudents: string[];
-
+  // Enrollment tracking — student IDs are stored in the Enrollment collection,
+  // not here, to avoid exceeding MongoDB's 16 MB document limit at scale.
   @Prop({ default: 0 })
   totalEnrollments: number;
 

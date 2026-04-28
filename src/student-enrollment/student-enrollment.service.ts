@@ -62,10 +62,9 @@ export class StudentEnrollmentService {
 
     const savedEnrollment = await enrollment.save();
 
-    // Update course's enrolled students and total enrollments
+    // Update course total enrollments counter
     await this.courseModel
       .findByIdAndUpdate(courseId, {
-        $addToSet: { enrolledStudents: studentId },
         $inc: { totalEnrollments: 1 },
       })
       .exec();
@@ -140,10 +139,9 @@ export class StudentEnrollmentService {
 
         await enrollment.save();
 
-        // Update course's enrolled students and total enrollments
+        // Update course total enrollments counter
         await this.courseModel
           .findByIdAndUpdate(item.courseId, {
-            $addToSet: { enrolledStudents: studentId },
             $inc: { totalEnrollments: 1 },
           })
           .exec();

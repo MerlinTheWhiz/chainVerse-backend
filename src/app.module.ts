@@ -73,6 +73,8 @@ import { StudentAuthModule } from './student-auth/student-auth.module';
     MongooseModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
         uri: config.get<string>('mongoUri'),
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
       }),
       inject: [ConfigService],
     }),
