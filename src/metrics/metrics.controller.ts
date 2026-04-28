@@ -29,7 +29,9 @@ export class MetricsController {
    */
   @Get('prometheus')
   @Header('Content-Type', 'text/plain; version=0.0.4; charset=utf-8')
-  @ApiOperation({ summary: 'Get application metrics (Prometheus format) — internal only' })
+  @ApiOperation({
+    summary: 'Get application metrics (Prometheus format) — internal only',
+  })
   getPrometheusMetrics(): string {
     return this.metricsService.prometheusText();
   }

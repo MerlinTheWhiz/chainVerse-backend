@@ -21,9 +21,7 @@ export interface ReadinessResult {
 
 @Injectable()
 export class HealthService {
-  constructor(
-    @InjectConnection() private readonly connection: Connection,
-  ) {}
+  constructor(@InjectConnection() private readonly connection: Connection) {}
   /**
    * Attempts a raw TCP connection and resolves with the round-trip latency.
    * This works regardless of which client library (if any) is installed.

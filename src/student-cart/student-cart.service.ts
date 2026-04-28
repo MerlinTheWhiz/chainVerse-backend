@@ -67,7 +67,13 @@ export class StudentCartService {
     const courseMap = new Map(
       courses.map((c) => [
         c.id,
-        { id: c.id, title: c.title, price: c.price, thumbnailUrl: c.thumbnailUrl, tutorName: c.tutorName },
+        {
+          id: c.id,
+          title: c.title,
+          price: c.price,
+          thumbnailUrl: c.thumbnailUrl,
+          tutorName: c.tutorName,
+        },
       ]),
     );
 

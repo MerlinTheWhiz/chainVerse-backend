@@ -21,7 +21,8 @@ export class PrivateTutoringBookingsService {
 
   async findOne(id: string) {
     const item = await this.bookingModel.findById(id).exec();
-    if (!item) throw new NotFoundException('PrivateTutoringBookings item not found');
+    if (!item)
+      throw new NotFoundException('PrivateTutoringBookings item not found');
     return item;
   }
 
@@ -33,13 +34,15 @@ export class PrivateTutoringBookingsService {
     const item = await this.bookingModel
       .findByIdAndUpdate(id, payload, { new: true })
       .exec();
-    if (!item) throw new NotFoundException('PrivateTutoringBookings item not found');
+    if (!item)
+      throw new NotFoundException('PrivateTutoringBookings item not found');
     return item;
   }
 
   async remove(id: string) {
     const item = await this.bookingModel.findByIdAndDelete(id).exec();
-    if (!item) throw new NotFoundException('PrivateTutoringBookings item not found');
+    if (!item)
+      throw new NotFoundException('PrivateTutoringBookings item not found');
     return { id, deleted: true };
   }
 }

@@ -474,6 +474,8 @@ export class AdminCourseService {
   }
 
   private sendEmail(to: string, subject: string, body: string) {
-    this.emailService.send(to, subject, body).catch(() => {/* non-blocking */});
+    this.emailService.send(to, subject, body).catch(() => {
+      /* non-blocking */
+    });
   }
 }

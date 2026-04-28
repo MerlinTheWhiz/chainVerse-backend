@@ -15,6 +15,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { MetricsModule } from './metrics/metrics.module';
 import { TracingModule } from './tracing/tracing.module';
 import { EmailModule } from './email/email.module';
+import { StellarModule } from './stellar/stellar.module';
 
 // Course modules
 import { AdminCourseModule } from './admin-course/admin-course.module';
@@ -119,6 +120,8 @@ import { StudentAuthModule } from './student-auth/student-auth.module';
     NotificationModule,
     // Financial Aid
     FinancialAidModule,
+    // Stellar
+    StellarModule,
   ],
   controllers: [AppController],
   providers: [
