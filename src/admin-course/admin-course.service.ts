@@ -3,7 +3,6 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
-  ConflictException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -338,7 +337,7 @@ export class AdminCourseService {
     }
 
     // Check if course has enrollments
-    if (course.enrolledStudents.length > 0 && !isAdmin) {
+    if (course.totalEnrollments > 0 && !isAdmin) {
       throw new BadRequestException(
         'Cannot delete course with enrolled students. Contact admin to delete.',
       );
@@ -369,8 +368,7 @@ export class AdminCourseService {
     return {
       courseId: id,
       courseTitle: course.title,
-      enrolledStudents: course.enrolledStudents,
-      totalEnrolled: course.enrolledStudents.length,
+      totalEnrolled: course.totalEnrollments,
     };
   }
 
@@ -391,11 +389,6 @@ export class AdminCourseService {
   async enrollStudent(courseId: string, studentId: string): Promise<void> {
     const course = await this.findOne(courseId);
 
-    if (course.enrolledStudents.includes(studentId)) {
-      throw new ConflictException('Student already enrolled');
-    }
-
-    course.enrolledStudents.push(studentId);
     course.totalEnrollments += 1;
     await course.save();
 
@@ -467,7 +460,6 @@ export class AdminCourseService {
       hasCertificate: course.hasCertificate,
       status: course.status,
       curriculum: course.curriculum,
-      enrolledStudents: course.enrolledStudents,
       totalEnrollments: course.totalEnrollments,
       totalReviews: course.totalReviews,
       averageRating: course.averageRating,
