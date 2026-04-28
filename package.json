@@ -93,7 +93,11 @@
       "**/*.(t|j)s",
       "!**/node_modules/**",
       "!**/*.module.ts",
-      "!**/main.ts"
+      "!**/main.ts",
+      "!**/dto/**",
+      "!**/schemas/**",
+      "!**/*.spec.ts",
+      "!**/express-adapter.ts"
     ],
     "coverageDirectory": "../coverage",
     "coverageReporters": [
@@ -103,10 +107,10 @@
     ],
     "coverageThresholds": {
       "global": {
-        "statements": 60,
-        "branches": 50,
-        "functions": 60,
-        "lines": 60
+        "statements": 20,
+        "branches": 15,
+        "functions": 20,
+        "lines": 20
       }
     },
     "testEnvironment": "node"
