@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { SelectQueryBuilder } from 'typeorm';
 import { VerificationLog } from './verification-log.entity';
-import { CreateLogDto, VerificationLogRepository } from './verification-log.repository';
+import {
+  CreateLogDto,
+  VerificationLogRepository,
+} from './verification-log.repository';
 import { VerificationStatus } from './interfaces/verification.interface';
 
 const makeLog = (overrides: Partial<VerificationLog> = {}): VerificationLog =>
@@ -16,7 +19,7 @@ const makeLog = (overrides: Partial<VerificationLog> = {}): VerificationLog =>
     message: 'Entry granted',
     attemptedAt: new Date('2024-06-15T10:00:00Z'),
     ...overrides,
-  } as VerificationLog);
+  }) as VerificationLog;
 
 const makeDto = (overrides: Partial<CreateLogDto> = {}): CreateLogDto => ({
   ticketId: 'ticket-uuid-1',
@@ -28,7 +31,9 @@ const makeDto = (overrides: Partial<CreateLogDto> = {}): CreateLogDto => ({
   ...overrides,
 });
 
-const makeQb = (result: [VerificationLog[], number] | { status: string; count: string }[]) => {
+const makeQb = (
+  result: [VerificationLog[], number] | { status: string; count: string }[],
+) => {
   const qb: Partial<SelectQueryBuilder<VerificationLog>> = {
     where: jest.fn().mockReturnThis(),
     andWhere: jest.fn().mockReturnThis(),
@@ -41,7 +46,7 @@ const makeQb = (result: [VerificationLog[], number] | { status: string; count: s
     getManyAndCount: jest.fn().mockResolvedValue(result),
     getRawMany: jest.fn().mockResolvedValue(result),
   };
-  return qb as SelectQueryBuilder<VerificationLog>;
+  return qb;
 };
 
 describe('VerificationLogRepository', () => {
@@ -89,8 +94,15 @@ describe('VerificationLogRepository', () => {
     });
 
     it('persists a failed scan with null ticketId', async () => {
-      const dto = makeDto({ ticketId: null, status: VerificationStatus.NOT_FOUND, message: 'Ticket not found' });
-      const log = makeLog({ ticketId: null, status: VerificationStatus.NOT_FOUND });
+      const dto = makeDto({
+        ticketId: null,
+        status: VerificationStatus.NOT_FOUND,
+        message: 'Ticket not found',
+      });
+      const log = makeLog({
+        ticketId: null,
+        status: VerificationStatus.NOT_FOUND,
+      });
       mockTypeOrmRepo.create.mockReturnValue(log);
       mockTypeOrmRepo.save.mockResolvedValue(log);
 
@@ -129,14 +141,18 @@ describe('VerificationLogRepository', () => {
 
       expect(result.logs).toHaveLength(2);
       expect(result.total).toBe(2);
-      expect(qb.where).toHaveBeenCalledWith('log.event_id = :eventId', { eventId: 'event-uuid-1' });
+      expect(qb.where).toHaveBeenCalledWith('log.event_id = :eventId', {
+        eventId: 'event-uuid-1',
+      });
     });
 
     it('applies status filter when provided', async () => {
       const qb = makeQb([[makeLog()], 1]);
       mockTypeOrmRepo.createQueryBuilder.mockReturnValue(qb);
 
-      await service.getLogsForEvent('event-uuid-1', { status: VerificationStatus.ALREADY_USED });
+      await service.getLogsForEvent('event-uuid-1', {
+        status: VerificationStatus.ALREADY_USED,
+      });
 
       expect(qb.andWhere).toHaveBeenCalledWith('log.status = :status', {
         status: VerificationStatus.ALREADY_USED,
@@ -152,8 +168,12 @@ describe('VerificationLogRepository', () => {
 
       await service.getLogsForEvent('event-uuid-1', { from, to });
 
-      expect(qb.andWhere).toHaveBeenCalledWith('log.attempted_at >= :from', { from });
-      expect(qb.andWhere).toHaveBeenCalledWith('log.attempted_at <= :to', { to });
+      expect(qb.andWhere).toHaveBeenCalledWith('log.attempted_at >= :from', {
+        from,
+      });
+      expect(qb.andWhere).toHaveBeenCalledWith('log.attempted_at <= :to', {
+        to,
+      });
     });
 
     it('caps limit at MAX_LIMIT (500)', async () => {
@@ -200,21 +220,31 @@ describe('VerificationLogRepository', () => {
 
   describe('getLogsForTicket', () => {
     it('returns logs scoped to a ticket', async () => {
-      const logs = [makeLog(), makeLog({ status: VerificationStatus.ALREADY_USED })];
+      const logs = [
+        makeLog(),
+        makeLog({ status: VerificationStatus.ALREADY_USED }),
+      ];
       const qb = makeQb([logs, 2]);
       mockTypeOrmRepo.createQueryBuilder.mockReturnValue(qb);
 
       const result = await service.getLogsForTicket('ticket-uuid-1');
 
       expect(result.total).toBe(2);
-      expect(qb.where).toHaveBeenCalledWith('log.ticket_id = :ticketId', { ticketId: 'ticket-uuid-1' });
+      expect(qb.where).toHaveBeenCalledWith('log.ticket_id = :ticketId', {
+        ticketId: 'ticket-uuid-1',
+      });
     });
 
     it('applies status filter', async () => {
-      const qb = makeQb([[makeLog({ status: VerificationStatus.ALREADY_USED })], 1]);
+      const qb = makeQb([
+        [makeLog({ status: VerificationStatus.ALREADY_USED })],
+        1,
+      ]);
       mockTypeOrmRepo.createQueryBuilder.mockReturnValue(qb);
 
-      await service.getLogsForTicket('ticket-uuid-1', { status: VerificationStatus.ALREADY_USED });
+      await service.getLogsForTicket('ticket-uuid-1', {
+        status: VerificationStatus.ALREADY_USED,
+      });
 
       expect(qb.andWhere).toHaveBeenCalledWith('log.status = :status', {
         status: VerificationStatus.ALREADY_USED,
@@ -263,8 +293,12 @@ describe('VerificationLogRepository', () => {
 
       await service.getStatusCountsForEvent('event-uuid-1', from, to);
 
-      expect(qb.andWhere).toHaveBeenCalledWith('log.attempted_at >= :from', { from });
-      expect(qb.andWhere).toHaveBeenCalledWith('log.attempted_at <= :to', { to });
+      expect(qb.andWhere).toHaveBeenCalledWith('log.attempted_at >= :from', {
+        from,
+      });
+      expect(qb.andWhere).toHaveBeenCalledWith('log.attempted_at <= :to', {
+        to,
+      });
     });
   });
 });

@@ -25,8 +25,7 @@ export const envValidationSchema = Joi.object({
     .default('info'),
 
   // ── Database ──────────────────────────────────────────────────────────────
-  MONGO_URI: Joi.string()
-    .default('mongodb://localhost:27017/chain-verse'),
+  MONGO_URI: Joi.string().default('mongodb://localhost:27017/chain-verse'),
 
   MONGODB_TEST_URI: Joi.string().allow('').optional(),
 
@@ -50,7 +49,9 @@ export const envValidationSchema = Joi.object({
   // ── Google OAuth ──────────────────────────────────────────────────────────
   GOOGLE_CLIENT_ID: Joi.string().allow('').optional(),
   GOOGLE_CLIENT_SECRET: Joi.string().allow('').optional(),
-  CALLBACK_URL: Joi.string().allow('').default('http://localhost:3000/auth/google/callback'),
+  CALLBACK_URL: Joi.string()
+    .allow('')
+    .default('http://localhost:3000/auth/google/callback'),
 
   // ── Redis (optional – app degrades gracefully without it) ─────────────────
   REDIS_URL: Joi.string().allow('').optional(),
@@ -62,7 +63,10 @@ export const envValidationSchema = Joi.object({
   RATE_LIMIT_GUEST_MAX: Joi.number().integer().positive().default(30),
   RATE_LIMIT_AUTH_WINDOW_MS: Joi.number().integer().positive().default(60000),
   RATE_LIMIT_AUTH_MAX: Joi.number().integer().positive().default(100),
-  RATE_LIMIT_PREMIUM_WINDOW_MS: Joi.number().integer().positive().default(60000),
+  RATE_LIMIT_PREMIUM_WINDOW_MS: Joi.number()
+    .integer()
+    .positive()
+    .default(60000),
   RATE_LIMIT_PREMIUM_MAX: Joi.number().integer().positive().default(200),
   RATE_LIMIT_ADMIN_WINDOW_MS: Joi.number().integer().positive().default(60000),
   RATE_LIMIT_ADMIN_MAX: Joi.number().integer().positive().default(500),

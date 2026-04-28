@@ -42,7 +42,10 @@ export class TutorJwtAuthController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.MODERATOR, Role.TUTOR)
-  async update(@Param('id') id: string, @Body() payload: UpdateTutorJwtAuthDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() payload: UpdateTutorJwtAuthDto,
+  ) {
     return this.service.update(id, payload);
   }
 

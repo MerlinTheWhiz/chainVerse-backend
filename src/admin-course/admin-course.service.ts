@@ -6,20 +6,25 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { ReviewCourseDto } from './dto/review-course.dto';
 import { Course, CourseDocument } from './schemas/course.schema';
+import { Tutor, TutorDocument } from '../tutor/schemas/tutor.schema';
 import { DomainEvents } from '../events/event-names';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AdminCourseService {
   constructor(
     @InjectModel(Course.name)
     private readonly courseModel: Model<CourseDocument>,
+    @InjectModel(Tutor.name)
+    private readonly tutorModel: Model<TutorDocument>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly emailService: EmailService,
   ) {}
 
   /**
@@ -54,35 +59,41 @@ export class AdminCourseService {
   }
 
   /**
-   * Find all courses with optional filters
+   * Find all courses with optional filters and pagination
    */
   async findAll(filters?: {
     status?: string;
     category?: string;
     tutorId?: string;
     limit?: number;
-    skip?: number;
+    page?: number;
   }) {
     const query: Record<string, unknown> = {};
 
-    if (filters?.status) {
-      query.status = filters.status;
-    }
-    if (filters?.category) {
-      query.category = filters.category;
-    }
-    if (filters?.tutorId) {
-      query.tutorId = filters.tutorId;
-    }
+    if (filters?.status) query.status = filters.status;
+    if (filters?.category) query.category = filters.category;
+    if (filters?.tutorId) query.tutorId = filters.tutorId;
 
-    const courses = await this.courseModel
-      .find(query)
-      .sort({ createdAt: -1 })
-      .limit(filters?.limit || 100)
-      .skip(filters?.skip || 0)
-      .exec();
+    const limit = Math.min(filters?.limit || 10, 50);
+    const page = Math.max(filters?.page || 1, 1);
+    const skip = (page - 1) * limit;
 
-    return courses.map((c) => this.sanitizeCourse(c));
+    const [courses, total] = await Promise.all([
+      this.courseModel
+        .find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
+      this.courseModel.countDocuments(query).exec(),
+    ]);
+
+    return {
+      total,
+      page,
+      limit,
+      data: courses.map((c) => this.sanitizeCourse(c)),
+    };
   }
 
   /**
@@ -430,9 +441,9 @@ export class AdminCourseService {
     }
 
     if (Object.keys(update).length > 0) {
-      await this.courseModel.db
-        .collection('tutors')
-        .updateOne({ _id: tutorId }, { $inc: update });
+      await this.tutorModel
+        .findByIdAndUpdate(new Types.ObjectId(tutorId), { $inc: update })
+        .exec();
     }
   }
 
@@ -471,6 +482,6 @@ export class AdminCourseService {
   }
 
   private sendEmail(to: string, subject: string, body: string) {
-    console.log(`[Email] To: ${to} | Subject: ${subject} | Body: ${body}`);
+    this.emailService.send(to, subject, body).catch(() => {/* non-blocking */});
   }
 }

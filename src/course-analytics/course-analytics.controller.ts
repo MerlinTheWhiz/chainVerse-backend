@@ -15,7 +15,9 @@ export class CourseAnalyticsController {
   constructor(private readonly analyticsService: CourseAnalyticsService) {}
 
   @Get('courses/:id')
-  @ApiOperation({ summary: 'Get analytics for a specific course (tutor/admin only)' })
+  @ApiOperation({
+    summary: 'Get analytics for a specific course (tutor/admin only)',
+  })
   @Roles(Role.TUTOR, Role.ADMIN)
   async getCourseAnalytics(
     @Param('id') courseId: string,
@@ -23,17 +25,21 @@ export class CourseAnalyticsController {
     @CurrentUser('role') role: string,
   ) {
     const analytics = await this.analyticsService.getCourseAnalytics(courseId);
-    
+
     // Tutors can only see their own courses
     if (role === Role.TUTOR && analytics.tutorId !== userId) {
-      throw new Error('Unauthorized: You can only view analytics for your own courses');
+      throw new Error(
+        'Unauthorized: You can only view analytics for your own courses',
+      );
     }
-    
+
     return analytics;
   }
 
   @Get('tutor/:tutorId')
-  @ApiOperation({ summary: 'Get analytics for a tutor (tutor can only view their own)' })
+  @ApiOperation({
+    summary: 'Get analytics for a tutor (tutor can only view their own)',
+  })
   @Roles(Role.TUTOR, Role.ADMIN)
   async getTutorAnalytics(
     @Param('tutorId') tutorId: string,
@@ -44,7 +50,7 @@ export class CourseAnalyticsController {
     if (role === Role.TUTOR && tutorId !== userId) {
       throw new Error('Unauthorized: You can only view your own analytics');
     }
-    
+
     return this.analyticsService.getTutorAnalytics(tutorId);
   }
 

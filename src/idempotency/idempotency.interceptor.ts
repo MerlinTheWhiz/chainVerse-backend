@@ -33,10 +33,10 @@ export class IdempotencyInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    const isIdempotent = this.reflector.getAllAndOverride<boolean>(IDEMPOTENT_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const isIdempotent = this.reflector.getAllAndOverride<boolean>(
+      IDEMPOTENT_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
     if (!isIdempotent) return next.handle();
 
@@ -44,7 +44,9 @@ export class IdempotencyInterceptor implements NestInterceptor {
     const req = http.getRequest<Request & { user?: { id: string } }>();
     const res = http.getResponse<Response>();
 
-    const idempotencyKey = req.headers['x-idempotency-key'] as string | undefined;
+    const idempotencyKey = req.headers['x-idempotency-key'] as
+      | string
+      | undefined;
 
     if (!idempotencyKey) {
       throw new BadRequestException({
