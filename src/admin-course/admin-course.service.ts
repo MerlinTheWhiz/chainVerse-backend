@@ -14,6 +14,7 @@ import { ReviewCourseDto } from './dto/review-course.dto';
 import { Course, CourseDocument } from './schemas/course.schema';
 import { Tutor, TutorDocument } from '../tutor/schemas/tutor.schema';
 import { DomainEvents } from '../events/event-names';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AdminCourseService {
@@ -23,6 +24,7 @@ export class AdminCourseService {
     @InjectModel(Tutor.name)
     private readonly tutorModel: Model<TutorDocument>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly emailService: EmailService,
   ) {}
 
   /**
@@ -480,6 +482,6 @@ export class AdminCourseService {
   }
 
   private sendEmail(to: string, subject: string, body: string) {
-    console.log(`[Email] To: ${to} | Subject: ${subject} | Body: ${body}`);
+    this.emailService.send(to, subject, body).catch(() => {/* non-blocking */});
   }
 }
