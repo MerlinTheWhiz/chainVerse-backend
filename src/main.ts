@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import helmet from 'helmet';
 import * as compression from 'compression';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 
@@ -55,6 +56,10 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  await app.listen(process.env.PORT ?? 3000);
+  app.enableShutdownHooks();
+
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT') ?? 3000;
+  await app.listen(port);
 }
 bootstrap();
