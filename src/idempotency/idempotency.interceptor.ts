@@ -60,6 +60,13 @@ export class IdempotencyInterceptor implements NestInterceptor {
     return from(this.idempotencyService.find(idempotencyKey, userId)).pipe(
       switchMap((cached) => {
         if (cached) {
+          // Path validation: reject if path does not match
+          if ((cached as any).path && (cached as any).path !== req.path) {
+            throw new BadRequestException({
+              message: 'Idempotency-Key reuse for different endpoint',
+              errorCode: ErrorCode.VAL_IDEMPOTENCY_KEY_PATH_MISMATCH,
+            });
+          }
           res.status(cached.statusCode).json(cached.responseBody);
           // Return an empty observable – response is already sent.
           return new Observable((subscriber) => subscriber.complete());

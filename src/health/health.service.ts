@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import * as net from 'net';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 
 export type ProbeStatus = 'ok' | 'error' | 'not_configured';
 
@@ -20,6 +21,9 @@ export interface ReadinessResult {
 
 @Injectable()
 export class HealthService {
+  constructor(
+    @InjectConnection() private readonly connection: Connection,
+  ) {}
   /**
    * Attempts a raw TCP connection and resolves with the round-trip latency.
    * This works regardless of which client library (if any) is installed.
@@ -75,11 +79,11 @@ export class HealthService {
   }
 
   async checkDatabase(): Promise<ProbeResult> {
-    const target = this.parseMongoTarget();
-    if (!target) return { status: 'not_configured' };
-
+    if (!this.connection?.db) return { status: 'not_configured' };
+    const start = Date.now();
     try {
-      const latency_ms = await this.tcpProbe(target.host, target.port);
+      await this.connection.db.admin().ping();
+      const latency_ms = Date.now() - start;
       return { status: 'ok', latency_ms };
     } catch (err: any) {
       return { status: 'error', error: err.message };
