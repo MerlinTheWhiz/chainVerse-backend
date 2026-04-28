@@ -18,6 +18,7 @@ import { EmailModule } from './email/email.module';
 
 // Course modules
 import { AdminCourseModule } from './admin-course/admin-course.module';
+import { AdminAuthModule } from './admin-auth/admin-auth.module';
 import { TutorModule } from './tutor/tutor.module';
 import { TutorCourseModule } from './tutor-course/tutor-course.module';
 import { CourseDiscoveryModule } from './course-discovery/course-discovery.module';
@@ -81,6 +82,7 @@ import { NotificationModule } from './notification/notification.module';
     // Tutor modules
     TutorModule,
     // Course modules
+    AdminAuthModule,
     AdminCourseModule,
     TutorCourseModule,
     CourseDiscoveryModule,
