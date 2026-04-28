@@ -16,7 +16,11 @@ import { Request } from 'express';
  */
 @Injectable()
 export class InternalOnlyGuard implements CanActivate {
-  private static readonly LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
+  private static readonly LOOPBACK = new Set([
+    '127.0.0.1',
+    '::1',
+    '::ffff:127.0.0.1',
+  ]);
 
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest<Request>();
@@ -26,6 +30,8 @@ export class InternalOnlyGuard implements CanActivate {
       return true;
     }
 
-    throw new ForbiddenException('Metrics endpoint is restricted to internal access only');
+    throw new ForbiddenException(
+      'Metrics endpoint is restricted to internal access only',
+    );
   }
 }

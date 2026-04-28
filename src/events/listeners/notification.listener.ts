@@ -29,7 +29,9 @@ export class NotificationListener {
         'Welcome to ChainVerse Academy!',
         `Hi ${payload.firstName}, your account is ready. Please verify your email to continue.`,
       )
-      .catch(() => {/* non-blocking */});
+      .catch(() => {
+        /* non-blocking */
+      });
   }
 
   @OnEvent(DomainEvents.STUDENT_ENROLLED)

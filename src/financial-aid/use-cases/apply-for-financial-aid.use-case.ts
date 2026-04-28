@@ -14,7 +14,10 @@ export class ApplyForFinancialAidUseCase {
   constructor(private readonly repository: FinancialAidApplicationRepository) {}
 
   async execute(dto: CreateFinancialAidDto): Promise<FinancialAidApplication> {
-    const existing = await this.repository.findByStudentAndCourse(dto.studentId, dto.courseId);
+    const existing = await this.repository.findByStudentAndCourse(
+      dto.studentId,
+      dto.courseId,
+    );
     if (existing) {
       throw new ConflictException('Application already submitted');
     }

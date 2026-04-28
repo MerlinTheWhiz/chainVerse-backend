@@ -13,7 +13,10 @@ import {
   CourseRatingDocument,
 } from './schemas/course-rating.schema';
 import { Course } from '../admin-course/schemas/course.schema';
-import { Enrollment, EnrollmentDocument } from '../student-enrollment/schemas/enrollment.schema';
+import {
+  Enrollment,
+  EnrollmentDocument,
+} from '../student-enrollment/schemas/enrollment.schema';
 
 @Injectable()
 export class CourseRatingsFeedbackService {

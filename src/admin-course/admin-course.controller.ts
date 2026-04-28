@@ -29,7 +29,9 @@ export class AdminCourseController {
   constructor(private readonly adminCourseService: AdminCourseService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all courses with optional filters and pagination' })
+  @ApiOperation({
+    summary: 'Get all courses with optional filters and pagination',
+  })
   findAll(
     @Query('status') status?: string,
     @Query('category') category?: string,

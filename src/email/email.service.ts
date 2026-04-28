@@ -36,7 +36,9 @@ export class EmailService {
       await this.transporter.sendMail({ from, to, subject, text });
       this.logger.log(`Email sent to ${to}: ${subject}`);
     } else {
-      this.logger.warn(`SMTP not configured. Email to ${to} was NOT sent: ${subject}`);
+      this.logger.warn(
+        `SMTP not configured. Email to ${to} was NOT sent: ${subject}`,
+      );
     }
   }
 
