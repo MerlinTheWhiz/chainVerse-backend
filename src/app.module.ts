@@ -36,6 +36,7 @@ import { SubscriptionPlanModule } from './subscription-plan/subscription-plan.mo
 import { OrganizationModule } from './organization/organization.module';
 import { OrganizationMemberModule } from './organization-member/organization-member.module';
 import { NotificationModule } from './notification/notification.module';
+import { StudentAuthModule } from './student-auth/student-auth.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { NotificationModule } from './notification/notification.module';
     CourseDiscoveryModule,
     CourseRatingsFeedbackModule,
     // Student modules
+    StudentAuthModule,
     StudentSavedCoursesModule,
     StudentCartModule,
     StudentEnrollmentModule,
