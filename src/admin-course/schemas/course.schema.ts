@@ -21,7 +21,7 @@ export class Course {
   @Prop({ required: true, min: 0 })
   price: number;
 
-  @Prop({ default: null })
+  @Prop({ type: String, default: null })
   thumbnailUrl: string | null;
 
   @Prop({ type: [String], default: [] })
@@ -41,13 +41,13 @@ export class Course {
   @Prop({ default: 'beginner' })
   level: 'beginner' | 'intermediate' | 'advanced' | 'all-levels';
 
-  @Prop({ default: null })
+  @Prop({ type: String, default: null })
   duration: string | null; // e.g., "10 hours", "6 weeks"
 
   @Prop({ default: 0 })
   durationHours: number; // Numeric duration in hours for filtering
 
-  @Prop({ default: null })
+  @Prop({ type: String, default: null })
   language: string | null; // e.g., "English"
 
   @Prop({ default: false })

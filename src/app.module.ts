@@ -19,6 +19,7 @@ import { EmailModule } from './email/email.module';
 // Course modules
 import { AdminCourseModule } from './admin-course/admin-course.module';
 import { BadgeModule } from './badge/badge.module';
+import { AdminAuthModule } from './admin-auth/admin-auth.module';
 import { TutorModule } from './tutor/tutor.module';
 import { TutorCourseModule } from './tutor-course/tutor-course.module';
 import { CourseDiscoveryModule } from './course-discovery/course-discovery.module';
@@ -37,6 +38,7 @@ import { OrganizationModule } from './organization/organization.module';
 import { OrganizationMemberModule } from './organization-member/organization-member.module';
 import { NotificationModule } from './notification/notification.module';
 import { FinancialAidModule } from './financial-aid/financial-aid.module';
+import { StudentAuthModule } from './student-auth/student-auth.module';
 
 @Module({
   imports: [
@@ -83,12 +85,14 @@ import { FinancialAidModule } from './financial-aid/financial-aid.module';
     // Tutor modules
     TutorModule,
     // Course modules
+    AdminAuthModule,
     AdminCourseModule,
     TutorCourseModule,
     CourseDiscoveryModule,
     CourseRatingsFeedbackModule,
     BadgeModule,
     // Student modules
+    StudentAuthModule,
     StudentSavedCoursesModule,
     StudentCartModule,
     StudentEnrollmentModule,
